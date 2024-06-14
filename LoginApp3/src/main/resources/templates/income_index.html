@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Income Management System</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+<div class="container my-2">
+    <h1>Incomes List</h1>
+
+    <a th:href="@{/showNewIncomeForm}" class="btn btn-primary btn-sm mb-3"> Add Income </a>
+
+    <table border="1" class="table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th>Income LocalDate</th>
+            <th>Income IncomePrice</th>
+            <th>Income IncomeSubject</th>
+            <th>Income TypeCost</th>
+            <th>Income PriceCost</th>
+            <th>Income CostSubject</th>
+            <th> Actions </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="income : ${listIncomes}">
+            <td th:text="${income.localDate}"></td>
+            <td th:text="${income.incomePrice}"></td>
+            <td th:text="${income.incomeSubject}"></td>
+            <td th:text="${income.typeCost}"></td>
+            <td th:text="${income.priceCost}"></td>
+            <td th:text="${income.costSubject}"></td>
+            <td> <a th:href="@{/showFormForUpdate/{id}(id=${income.id})}" class="btn btn-primary">Update</a>
+                <a th:href="@{/deleteIncome/{id}(id=${income.id})}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>
