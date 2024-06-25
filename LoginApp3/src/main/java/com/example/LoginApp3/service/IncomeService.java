@@ -12,4 +12,5 @@ public interface IncomeService {
     void saveIncome(Income income);
     Income getIncomeById(long id);
     void deleteIncomeById(long id);
+
 }

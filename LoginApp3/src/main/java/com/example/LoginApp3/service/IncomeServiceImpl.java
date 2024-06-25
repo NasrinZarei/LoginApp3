@@ -21,7 +21,8 @@ public class IncomeServiceImpl implements IncomeService {
 
     @Override
     public List<Income> getAllIncomes(Integer userId) {
-        return incomeRepository.findAll();
+
+        return  incomeRepository.findByUserId(userId);
     }
 
     @Override
@@ -45,4 +46,11 @@ public class IncomeServiceImpl implements IncomeService {
     public void deleteIncomeById(long id) {
         this.incomeRepository.deleteById(id);
     }
+
+//    @Override
+//    public List<Income> findByUserId(Integer userId) {
+//        return (List<Income>) incomeRepository.findByUserId(userId);
+//    }
+
+
 }

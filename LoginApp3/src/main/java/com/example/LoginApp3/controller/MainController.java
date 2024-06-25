@@ -82,9 +82,11 @@ public class MainController {
     }
 
     @PostMapping("/saveIncome")
-    public String saveIncome(@ModelAttribute("income") Income income) {
+    public String saveIncome(@ModelAttribute("income") Income income, HttpSession session) {
         // save income to database
-
+        Integer userId = (Integer) session.getAttribute("userId");
+        System.out.println("userId = " + userId);
+        income.setUserId(userId);
         incomeService.saveIncome(income);
         return "redirect:/income";
     }
