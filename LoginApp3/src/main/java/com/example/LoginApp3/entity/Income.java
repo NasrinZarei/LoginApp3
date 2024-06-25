@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "income")
 public class Income {
+
+    @Column(name="user_id")
+    private int userId ;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -25,6 +28,14 @@ public class Income {
 
     @Column(name="cost_Subject")
     private String costSubject;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public long getId() {
         return id;

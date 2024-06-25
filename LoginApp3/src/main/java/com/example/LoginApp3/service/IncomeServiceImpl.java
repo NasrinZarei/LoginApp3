@@ -20,7 +20,7 @@ public class IncomeServiceImpl implements IncomeService {
 
 
     @Override
-    public List<Income> getAllIncomes() {
+    public List<Income> getAllIncomes(Integer userId) {
         return incomeRepository.findAll();
     }
 

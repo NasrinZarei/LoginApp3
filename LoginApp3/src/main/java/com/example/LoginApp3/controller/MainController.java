@@ -5,6 +5,7 @@ import com.example.LoginApp3.entity.SignUser;
 import com.example.LoginApp3.entity.User;
 import com.example.LoginApp3.service.IncomeService;
 import com.example.LoginApp3.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,10 +47,17 @@ public class MainController {
 
 
     @PostMapping("/login")
-    public String loginForm(@RequestParam String email, String password){
+    public String loginForm(@RequestParam String email, String password, HttpSession session){
+//        User checkUserLogin = userService.findOneByEmailAndPassword(email, password);
+//        System.out.println(checkUserLogin.getId());
+//        if (checkUserLogin != null) {
+//
+//            return "sign_plane";
         User checkUserLogin = userService.findOneByEmailAndPassword(email, password);
         if (checkUserLogin != null) {
+            session.setAttribute("userId", checkUserLogin.getId());
             return "sign_plane";
+
         }
         System.out.println("---1111------"+ checkUserLogin);
         return"message";
@@ -59,9 +67,9 @@ public class MainController {
 
     // display list of incomes
     @GetMapping("/income")
-    public String viewHomePage(Model model) {
-
-        model.addAttribute("listIncomes", incomeService.getAllIncomes());
+    public String viewHomePage(HttpSession session,Model model) {
+        Integer userId = (Integer) session.getAttribute("userId");
+        model.addAttribute("listIncomes", incomeService.getAllIncomes(userId));
         return "income_index";
     }
 
@@ -76,6 +84,7 @@ public class MainController {
     @PostMapping("/saveIncome")
     public String saveIncome(@ModelAttribute("income") Income income) {
         // save income to database
+
         incomeService.saveIncome(income);
         return "redirect:/income";
     }
