@@ -47,10 +47,7 @@ public class IncomeServiceImpl implements IncomeService {
         this.incomeRepository.deleteById(id);
     }
 
-//    @Override
-//    public List<Income> findByUserId(Integer userId) {
-//        return (List<Income>) incomeRepository.findByUserId(userId);
-//    }
+
 
 
 }

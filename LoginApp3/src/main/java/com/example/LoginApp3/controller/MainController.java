@@ -1,10 +1,13 @@
 package com.example.LoginApp3.controller;
 
+import com.example.LoginApp3.entity.Comment;
 import com.example.LoginApp3.entity.Income;
 import com.example.LoginApp3.entity.SignUser;
 import com.example.LoginApp3.entity.User;
+import com.example.LoginApp3.service.CommentService;
 import com.example.LoginApp3.service.IncomeService;
 import com.example.LoginApp3.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,37 @@ public class MainController {
     UserService userService;
     @Autowired
     IncomeService incomeService ;
+    @Autowired
+    CommentService commentService;
+
+    @GetMapping("/")
+    public String viewHomePage(Model model) {
+
+        model.addAttribute("listComments", commentService.getAllIncomes());
+        return "index";
+    }
+    @GetMapping("/userComment")
+    public String ShowPage(Model model){
+        Comment comment = new Comment();
+        model.addAttribute("comment",comment);
+        System.out.println("ccc");
+        return "commentForm";
+
+    }
+    @PostMapping("/userComment")
+    public String SubmitComment(@ModelAttribute("comment")Comment comment){
+        System.out.println("mmm");
+        commentService.saveComment(comment);
+        System.out.println("ddd");
+        return "redirect:/";
+    }
+//    @RequestMapping(value = "/comment")
+//    public String showComment(Model model){
+//        model.addAttribute("comment",commentService.getAllComment());
+//        return "redirect:/";
+//    }
+
+
 
     // display user
     @GetMapping("/register")
@@ -29,14 +63,10 @@ public class MainController {
         return "register_form";
     }
     @PostMapping("/register")
-    public User submitForm(@ModelAttribute("user")User user){
+    public String submitForm(@ModelAttribute("user")User user){
         System.out.println(user.getEmail());
-        //  User checkUser = userService.findOneByEmailAndPassword(email, password);
-//        if( user.getEmail()!= null || user.getEmail().equals(checkUser.getEmail())) {
-//            System.out.println("your email is duplicate or null");
-//        }
-
-        return  userService.create(user);
+         userService.create(user);
+         return "redirect:/register";
     }
     @GetMapping("/login")
     public String showSignForm(Model model){
@@ -48,11 +78,7 @@ public class MainController {
 
     @PostMapping("/login")
     public String loginForm(@RequestParam String email, String password, HttpSession session){
-//        User checkUserLogin = userService.findOneByEmailAndPassword(email, password);
-//        System.out.println(checkUserLogin.getId());
-//        if (checkUserLogin != null) {
-//
-//            return "sign_plane";
+
         User checkUserLogin = userService.findOneByEmailAndPassword(email, password);
         if (checkUserLogin != null) {
             session.setAttribute("userId", checkUserLogin.getId());
@@ -64,14 +90,25 @@ public class MainController {
 
 
     }
+    @RequestMapping(value = "/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return "redirect:/login";
+    }
+
 
     // display list of incomes
     @GetMapping("/income")
-    public String viewHomePage(HttpSession session,Model model) {
+    public String viewIncomePage(HttpSession session,Model model) {
         Integer userId = (Integer) session.getAttribute("userId");
+
         model.addAttribute("listIncomes", incomeService.getAllIncomes(userId));
         return "income_index";
     }
+
 
     @GetMapping("/showNewIncomeForm")
     public String showNewIncomeForm(Model model) {
@@ -80,6 +117,7 @@ public class MainController {
         model.addAttribute("income", income);
         return "new_income";
     }
+
 
     @PostMapping("/saveIncome")
     public String saveIncome(@ModelAttribute("income") Income income, HttpSession session) {
